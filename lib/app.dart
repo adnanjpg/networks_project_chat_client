@@ -8,6 +8,9 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ClientManager.auth('adnan');
+    ClientManager.setListener((msg) {
+      debugPrint(msg.toString());
+    });
 
     return const MaterialApp();
   }

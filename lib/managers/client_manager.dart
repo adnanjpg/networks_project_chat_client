@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:networks_project_chat_client/managers/prefs_manager.dart';
@@ -17,6 +18,20 @@ abstract class ClientManager {
   }
 
   static Uri get _wsUri => Uri.parse(_wsUrl);
+  static StreamSubscription? _subscription;
+
+  static void setListener(Function(MessageModel msg) listener) {
+    _subscription = channel.stream.listen((event) {
+      final msg = MessageModel.fromJson(json.decode(event));
+
+      listener(msg);
+    });
+  }
+
+  static void dispose() {
+    _subscription?.cancel();
+    _ch?.sink.close();
+  }
 
   static IOWebSocketChannel get _channel {
     _ch ??= IOWebSocketChannel.connect(_wsUri);
@@ -40,11 +55,5 @@ abstract class ClientManager {
     );
 
     channel.sink.add(msg.toJsonStr());
-
-    channel.stream.listen((event) {
-      final msg = MessageModel.fromJson(json.decode(event));
-
-      print('Received message: $msg');
-    });
   }
 }
