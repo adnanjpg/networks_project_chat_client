@@ -30,4 +30,14 @@ abstract class PrefsManager {
       name: userName,
     );
   }
+
+  static Future<void> setUser(UserModel user) async {
+    final prefs = await _prefs;
+    if (user.id != null) {
+      await prefs.setString(userIdPrefs, user.id!.toString());
+    }
+    if (user.name != null) {
+      await prefs.setString(userNamePrefs, user.name!.toString());
+    }
+  }
 }
