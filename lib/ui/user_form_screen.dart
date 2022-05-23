@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:networks_project_chat_client/main.dart';
-import 'package:networks_project_chat_client/managers/prefs_manager.dart';
-import 'package:networks_project_chat_client/utils/routes_consts.dart';
+import '../main.dart';
+import '../managers/prefs_manager.dart';
+import '../utils/routes_consts.dart';
 
 import '../managers/client_manager.dart';
 import '../models/user_model.dart';
@@ -54,7 +52,7 @@ class _UserFormScreenState extends ConsumerState<UserFormScreen> {
                 PrefsManager.setUser(user);
                 ClientManager.auth(ref);
 
-                Navigator.of(context).pushReplacementNamed(chatListRoute);
+                Navigator.of(context).pushReplacementNamed(rChatList);
               },
               child: const Text('Continue'),
             ),

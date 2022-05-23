@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:networks_project_chat_client/models/chat_model.dart';
+import '../../models/chat_model.dart';
 
 class ChatLI extends StatelessWidget {
   final ChatModel chat;

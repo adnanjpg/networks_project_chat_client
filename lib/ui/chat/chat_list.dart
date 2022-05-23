@@ -1,7 +1,5 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:networks_project_chat_client/managers/chat_manager.dart';
+import '../../managers/chat_manager.dart';
 
 import '../../models/chat_model.dart';
 import 'chat_li.dart';

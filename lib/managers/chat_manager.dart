@@ -1,14 +1,32 @@
 import 'dart:async';
 
-import 'package:networks_project_chat_client/managers/client_manager.dart';
-import 'package:networks_project_chat_client/models/chat_model.dart';
-import 'package:networks_project_chat_client/models/message_model.dart';
-import 'package:networks_project_chat_client/models/user_model.dart';
+import 'client_manager.dart';
+import '../models/chat_model.dart';
+import '../models/message_model.dart';
+import '../models/user_model.dart';
 
 import '../utils/command_consts.dart';
 import 'prefs_manager.dart';
 
 abstract class ChatManager {
+  static Future<ChatModel?> createChat(List<UserModel> users) async {
+    final msg = MessageModel(
+      title: createChatCommand,
+      params: {
+        'users': users.map((e) => e.toJson()).toList(),
+      },
+    );
+    ClientManager.sendMessage(msg);
+
+    await for (final msg in ClientManager.chatController.stream) {
+      if (msg.title == createChatCommand) {
+        return ChatModel.fromJson(msg.params!);
+      }
+    }
+
+    return null;
+  }
+
   static final chatsController = StreamController<List<ChatModel>>.broadcast();
   static List<ChatModel> chats = [];
   static Future initChatsList() async {

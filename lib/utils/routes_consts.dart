@@ -1,3 +1,4 @@
-const mainRoute = '/';
+const rMain = '/';
 
-const chatListRoute = 'chatList';
+const rChatList = 'chatList';
+const rChatScreen = 'chatScreen';

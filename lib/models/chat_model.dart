@@ -30,4 +30,28 @@ class ChatModel {
       'title': title,
     };
   }
+
+  Iterable<String> get userNames {
+    final nms = users.map((user) => user.name ?? '');
+    return nms;
+  }
+
+  String get userNamesStr {
+    final nms = userNames;
+
+    if (nms.length <= 1) {
+      return nms.join('');
+    }
+
+    // we wanna show the names as "name1, name2, name3 and name4"
+
+    final names = List.from(nms);
+
+    names.removeLast();
+
+    return [
+      names.join(', '),
+      ' and ${nms.last}',
+    ].join();
+  }
 }

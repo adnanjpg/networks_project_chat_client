@@ -2,16 +2,14 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:networks_project_chat_client/managers/prefs_manager.dart';
-import 'package:networks_project_chat_client/models/chat_model.dart';
-import 'package:networks_project_chat_client/models/message_model.dart';
-import 'package:networks_project_chat_client/utils/command_consts.dart';
-import 'package:networks_project_chat_client/utils/consts.dart';
+import 'prefs_manager.dart';
+import '../models/message_model.dart';
+import '../utils/command_consts.dart';
+import '../utils/consts.dart';
 import 'package:web_socket_channel/io.dart';
 
 import '../main.dart';
 import '../models/user_model.dart';
-import '../utils/enums/status_codes.dart';
 
 abstract class ClientManager {
   static IOWebSocketChannel? _ch;
@@ -23,10 +21,12 @@ abstract class ClientManager {
   static Uri get _wsUri => Uri.parse(_wsUrl);
   static StreamSubscription? _subscription;
 
-  static StreamController<MessageModel> authController = StreamController();
-  static StreamController<MessageModel> chatController = StreamController();
+  static StreamController<MessageModel> authController =
+      StreamController.broadcast();
+  static StreamController<MessageModel> chatController =
+      StreamController.broadcast();
   static StreamController<MessageModel> chatUsersController =
-      StreamController();
+      StreamController.broadcast();
 
   static void setListener() {
     _subscription ??= channel.stream.listen((event) {
@@ -37,6 +37,9 @@ abstract class ClientManager {
         PrefsManager.setUser(user);
       }
       if (msg.title == chatsListCommand) {
+        chatController.sink.add(msg);
+      }
+      if (msg.title == createChatCommand) {
         chatController.sink.add(msg);
       }
       if (msg.title == chatsUsersListCommand) {

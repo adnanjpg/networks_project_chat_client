@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:networks_project_chat_client/app.dart';
-import 'package:networks_project_chat_client/models/user_model.dart';
-import 'package:riverpod/riverpod.dart';
+import 'app.dart';
+import 'models/user_model.dart';
 
 import 'managers/prefs_manager.dart';
 

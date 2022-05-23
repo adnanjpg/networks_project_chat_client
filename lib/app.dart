@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:networks_project_chat_client/main.dart';
-import 'package:networks_project_chat_client/ui/chat/chat_ls.dart';
-import 'package:networks_project_chat_client/ui/user_form_screen.dart';
+import 'package:networks_project_chat_client/ui/chat/chat_screen/chat_screen.dart';
+import 'main.dart';
+import 'ui/chat/chat_ls.dart';
+import 'ui/user_form_screen.dart';
 
 import 'managers/client_manager.dart';
 import 'utils/routes_consts.dart';
@@ -27,9 +28,10 @@ class _AppState extends ConsumerState<App> {
     final user = ref.watch(userProv);
     return MaterialApp(
       routes: {
-        '/': (context) =>
+        rMain: (context) =>
             user == null ? const UserFormScreen() : const ChatLS(),
-        chatListRoute: (context) => const ChatLS(),
+        rChatList: (context) => const ChatLS(),
+        rChatScreen: (context) => const ChatScreen(),
       },
     );
   }
