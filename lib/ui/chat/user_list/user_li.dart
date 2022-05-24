@@ -16,8 +16,6 @@ class UserLI extends ConsumerWidget {
       onTap: () async {
         ref.read(currentChatProv.notifier).state = [user];
 
-        Navigator.of(context).pop();
-
         Navigator.of(context).pushNamed(rChatScreen);
       },
     );

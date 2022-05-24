@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:networks_project_chat_client/main.dart';
 
-import '../../../main.dart';
 import '../../../managers/chat_manager.dart';
 import '../../../models/chat_message_model.dart';
+import '../../../models/user_model.dart';
 import '../../../provs/current_chat_prov.dart';
 
 class ChatScreen extends ConsumerStatefulWidget {
@@ -41,7 +42,6 @@ class _MessageSendBarState extends ConsumerState<MessageSendBar> {
   @override
   Widget build(BuildContext context) {
     final chat = ref.watch(currentChatProv);
-    final me = ref.watch(userProv);
 
     return Padding(
       padding:
@@ -64,7 +64,6 @@ class _MessageSendBarState extends ConsumerState<MessageSendBar> {
               final text = controller.text;
               final msg = ChatMessageModel(
                 message: text,
-                senderId: me!.id!,
                 recieversIds: chat.ids.toList(),
               );
 
@@ -92,7 +91,9 @@ class _ChatMessagesListState extends ConsumerState<ChatMessagesList> {
   Widget build(BuildContext context) {
     final chat = ref.watch(currentChatProv);
     final allMsgs = ref.watch(ChatManager.chatMessagesProv);
-    final msgs = allMsgs.where((msg) => msg.recieversIds == chat.ids);
+    final msgs = allMsgs
+        // .where((msg) => msg.recieversIds == chat.ids)
+        ;
 
     return ListView.builder(
       itemCount: msgs.length,
@@ -111,7 +112,14 @@ class ChatMessageLI extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final chat = ref.watch(currentChatProv);
-    final messageOwner = chat.firstWhere((u) => u.id != message.senderId);
+    final me = ref.watch(userProv);
+
+    UserModel messageOwner;
+    try {
+      messageOwner = chat.firstWhere((u) => u.id == message.senderId);
+    } catch (e) {
+      messageOwner = me!;
+    }
 
     return ListTile(
       title: Column(

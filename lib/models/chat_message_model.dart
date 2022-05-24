@@ -3,7 +3,7 @@ import 'attachment_model.dart';
 class ChatMessageModel {
   final String? id;
   final List<String> recieversIds;
-  final String senderId;
+  final String? senderId;
 
   final String message;
 
@@ -12,7 +12,7 @@ class ChatMessageModel {
   const ChatMessageModel({
     this.id,
     required this.message,
-    required this.senderId,
+    this.senderId,
     required this.recieversIds,
     this.attachments,
   });
