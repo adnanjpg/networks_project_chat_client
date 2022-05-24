@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../main.dart';
 
+import '../main.dart';
 import '../managers/client_manager.dart';
 import '../models/user_model.dart';
 

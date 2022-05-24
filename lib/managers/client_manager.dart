@@ -33,10 +33,22 @@ abstract class ClientManager {
 
         if (msg.title == sendMessageCommand) {
           chatMessagesController.sink.add(msg);
+          return;
         }
 
         if (msg.title == chatsUsersListCommand) {
           chatUsersController.sink.add(msg);
+          return;
+        }
+
+        if (msg.title == authCommand) {
+          final prms = msg.params;
+          if (prms == null || prms.isEmpty) {
+            return;
+          }
+          final user = UserModel.fromJson(prms);
+
+          ref.read(userProv.notifier).state = user;
         }
       },
     );

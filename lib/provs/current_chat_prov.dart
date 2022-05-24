@@ -1,5 +1,6 @@
-import '../models/user_model.dart';
 import 'package:riverpod/riverpod.dart';
+
+import '../models/user_model.dart';
 
 typedef ChatUsers = List<UserModel>;
 

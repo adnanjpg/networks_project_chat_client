@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../main.dart';
 
 import '../../../models/user_model.dart';
 import '../../../provs/current_chat_prov.dart';
@@ -14,7 +15,13 @@ class UserLI extends ConsumerWidget {
     return ListTile(
       title: Text(user.name!),
       onTap: () async {
-        ref.read(currentChatProv.notifier).state = [user];
+        final me = ref.watch(userProv);
+
+        if (me == null) {
+          throw Exception('UserLI: me is null');
+        }
+
+        ref.read(currentChatProv.notifier).state = [user, me];
 
         Navigator.of(context).pushNamed(rChatScreen);
       },

@@ -1,10 +1,9 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:networks_project_chat_client/main.dart';
 
 import '../../../managers/chat_manager.dart';
 import '../../../models/chat_message_model.dart';
-import '../../../models/user_model.dart';
 import '../../../provs/current_chat_prov.dart';
 
 class ChatScreen extends ConsumerStatefulWidget {
@@ -87,13 +86,20 @@ class ChatMessagesList extends ConsumerStatefulWidget {
 }
 
 class _ChatMessagesListState extends ConsumerState<ChatMessagesList> {
+  bool _listsAreEqual(List<String> list1, List<String> list2) {
+    final l1 = Set.from(List.from(list1)..sort());
+    final l2 = Set.from(List.from(list2)..sort());
+
+    return const IterableEquality().equals(l1, l2);
+  }
+
   @override
   Widget build(BuildContext context) {
     final chat = ref.watch(currentChatProv);
     final allMsgs = ref.watch(ChatManager.chatMessagesProv);
-    final msgs = allMsgs
-        // .where((msg) => msg.recieversIds == chat.ids)
-        ;
+    final msgs = allMsgs.where(
+      (msg) => _listsAreEqual(msg.recieversIds, chat.ids.toList()),
+    );
 
     return ListView.builder(
       itemCount: msgs.length,
@@ -112,14 +118,8 @@ class ChatMessageLI extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final chat = ref.watch(currentChatProv);
-    final me = ref.watch(userProv);
 
-    UserModel messageOwner;
-    try {
-      messageOwner = chat.firstWhere((u) => u.id == message.senderId);
-    } catch (e) {
-      messageOwner = me!;
-    }
+    final messageOwner = chat.firstWhere((u) => u.id == message.senderId);
 
     return ListTile(
       title: Column(
