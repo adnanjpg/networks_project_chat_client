@@ -11,8 +11,10 @@ import 'client_manager.dart';
 abstract class ChatManager {
   static final usersProv = StateProvider<List<UserModel>>((_) => []);
   static List<UserModel> users = [];
+  static StreamSubscription<MessageModel>? _usersLis;
   static Future initUsersList(WidgetRef ref) async {
-    ClientManager.chatUsersController.stream.listen(
+    _usersLis?.cancel();
+    _usersLis = ClientManager.chatUsersController.stream.listen(
       (msg) {
         final params = msg.params;
         if (params == null) {
@@ -35,8 +37,10 @@ abstract class ChatManager {
   static final chatMessagesProv =
       StateProvider<List<ChatMessageModel>>((_) => []);
   static List<ChatMessageModel> chatMessages = [];
+  static StreamSubscription<MessageModel>? _msgsLis;
   static Future initChatMessagesList(WidgetRef ref) async {
-    ClientManager.chatMessagesController.stream.listen(
+    _msgsLis?.cancel();
+    _msgsLis = ClientManager.chatMessagesController.stream.listen(
       (msg) {
         final params = msg.params;
         if (params == null) {
