@@ -1,4 +1,24 @@
-import 'package:networks_project_chat_client/models/chat_model.dart';
+import '../models/user_model.dart';
 import 'package:riverpod/riverpod.dart';
 
-final currentChatProv = StateProvider<ChatModel?>((_) => null);
+typedef ChatUsers = List<UserModel>;
+
+extension A on ChatUsers {
+  String get userNamesStr {
+    return names.join(', ');
+  }
+
+  Iterable<String> get names {
+    return map((user) {
+      return user.name!;
+    });
+  }
+
+  Iterable<String> get ids {
+    return map((user) {
+      return user.id!;
+    });
+  }
+}
+
+final currentChatProv = StateProvider<ChatUsers>((_) => []);

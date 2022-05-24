@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'prefs_manager.dart';
 import '../models/message_model.dart';
 import '../utils/command_consts.dart';
 import '../utils/consts.dart';
@@ -10,6 +9,7 @@ import 'package:web_socket_channel/io.dart';
 
 import '../main.dart';
 import '../models/user_model.dart';
+import 'chat_manager.dart';
 
 abstract class ClientManager {
   static IOWebSocketChannel? _ch;
@@ -21,31 +21,28 @@ abstract class ClientManager {
   static Uri get _wsUri => Uri.parse(_wsUrl);
   static StreamSubscription? _subscription;
 
-  static StreamController<MessageModel> authController =
-      StreamController.broadcast();
-  static StreamController<MessageModel> chatController =
+  static StreamController<MessageModel> chatMessagesController =
       StreamController.broadcast();
   static StreamController<MessageModel> chatUsersController =
       StreamController.broadcast();
 
-  static void setListener() {
-    _subscription ??= channel.stream.listen((event) {
-      final msg = MessageModel.fromJson(json.decode(event));
+  static void setListener(WidgetRef ref) {
+    _subscription ??= channel.stream.listen(
+      (event) {
+        final msg = MessageModel.fromJson(json.decode(event));
 
-      if (msg.title == authCommand) {
-        final user = UserModel.fromJson(msg.params!);
-        PrefsManager.setUser(user);
-      }
-      if (msg.title == chatsListCommand) {
-        chatController.sink.add(msg);
-      }
-      if (msg.title == createChatCommand) {
-        chatController.sink.add(msg);
-      }
-      if (msg.title == chatsUsersListCommand) {
-        chatUsersController.sink.add(msg);
-      }
-    });
+        if (msg.title == sendMessageCommand) {
+          chatMessagesController.sink.add(msg);
+        }
+
+        if (msg.title == chatsUsersListCommand) {
+          chatUsersController.sink.add(msg);
+        }
+      },
+    );
+
+    ChatManager.initChatMessagesList(ref);
+    ChatManager.initUsersList(ref);
   }
 
   static void dispose() {
@@ -66,7 +63,7 @@ abstract class ClientManager {
 
     final msg = MessageModel(
       title: authCommand,
-      user: user,
+      params: user.toJson(),
     );
 
     await sendMessage(msg);

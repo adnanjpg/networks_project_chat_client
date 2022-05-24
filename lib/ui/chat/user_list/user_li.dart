@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:networks_project_chat_client/managers/chat_manager.dart';
-import 'package:networks_project_chat_client/managers/prefs_manager.dart';
-import 'package:networks_project_chat_client/utils/routes_consts.dart';
 
 import '../../../models/user_model.dart';
 import '../../../provs/current_chat_prov.dart';
+import '../../../utils/routes_consts.dart';
 
 class UserLI extends ConsumerWidget {
   final UserModel user;
@@ -16,10 +14,7 @@ class UserLI extends ConsumerWidget {
     return ListTile(
       title: Text(user.name!),
       onTap: () async {
-        final me = await PrefsManager.getUser();
-        final chat = await ChatManager.createChat([me!, user]);
-
-        ref.read(currentChatProv.notifier).state = chat;
+        ref.read(currentChatProv.notifier).state = [user];
 
         Navigator.of(context).pop();
 

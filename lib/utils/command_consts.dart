@@ -1,5 +1,3 @@
 const authCommand = 'auth';
-const getChatsCommand = 'getChats';
-const chatsListCommand = 'chatsList';
-const chatsUsersListCommand = 'chatUsersList';
-const createChatCommand = 'createChat';
+const sendMessageCommand = 'sendMessage';
+const chatsUsersListCommand = 'chatsUsersList';

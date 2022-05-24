@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../main.dart';
-import '../managers/prefs_manager.dart';
-import '../utils/routes_consts.dart';
 
 import '../managers/client_manager.dart';
 import '../models/user_model.dart';
@@ -49,10 +47,7 @@ class _UserFormScreenState extends ConsumerState<UserFormScreen> {
                 final user = UserModel(name: name);
                 ref.read(userProv.notifier).state = user;
 
-                PrefsManager.setUser(user);
                 ClientManager.auth(ref);
-
-                Navigator.of(context).pushReplacementNamed(rChatList);
               },
               child: const Text('Continue'),
             ),
