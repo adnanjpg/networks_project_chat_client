@@ -21,10 +21,14 @@ abstract class ChatManager {
           return;
         }
         final us = params['users'];
-        if (us == null || us.isEmpty) {
+        // it is okay for users to be empty,
+        // in case server announcing that
+        // the only user connected has
+        // disconnected
+        if (us == null) {
           return;
         }
-
+        users = [];
         for (var u in us) {
           final user = UserModel.fromJson(u);
           users.add(user);
