@@ -20,4 +20,16 @@ class UserModel {
       'name': name,
     };
   }
+
+  @override
+  bool operator ==(Object? other) =>
+      identical(this, other) ||
+      other is UserModel &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          name == other.name;
+
+  @override
+  // TODO: implement hashCode
+  int get hashCode => super.hashCode;
 }

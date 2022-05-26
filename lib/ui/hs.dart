@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'chat/user_list/user_selection_dialog.dart';
+import 'chat/chat_screen/chats_list_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -7,7 +7,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body: UserSelectionDialog(),
+      body: ChatsListScreen(),
     );
   }
 }

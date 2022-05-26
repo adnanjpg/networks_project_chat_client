@@ -12,19 +12,32 @@ class UserLI extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    return ListTile(
+    final selectedOnes = ref.watch(currentChatProv);
+
+    return CheckboxListTile(
       title: Text(user.name!),
-      onTap: () async {
+      onChanged: (bool? value) {
+        if (value != true) {
+          final oldSt = List.from(ref.read(currentChatProv));
+          oldSt.remove(user);
+
+          ref.read(currentChatProv.notifier).state = List.from(oldSt);
+          return;
+        }
+
         final me = ref.watch(userProv);
 
         if (me == null) {
           throw Exception('UserLI: me is null');
         }
 
-        ref.read(currentChatProv.notifier).state = [user, me];
-
-        Navigator.of(context).pushNamed(rChatScreen);
+        ref.read(currentChatProv.notifier).state = {
+          ...(selectedOnes.toList()),
+          user,
+          me,
+        }.toList();
       },
+      value: selectedOnes.contains(user),
     );
   }
 }
