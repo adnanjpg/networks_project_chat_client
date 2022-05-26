@@ -1,29 +1,85 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:networks_project_chat_client/provs/chat_names_prov.dart';
 
 import '../../../managers/chat_manager.dart';
 import '../../../models/chat_message_model.dart';
+import '../../../models/user_model.dart';
 import '../../../provs/current_chat_prov.dart';
 
-class ChatScreen extends ConsumerStatefulWidget {
+class ChatScreen extends StatelessWidget {
   const ChatScreen({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<ChatScreen> createState() => _ChatScreenState();
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      appBar: ChatAppBar(),
+      body: ChatMessagesList(),
+      bottomNavigationBar: MessageSendBar(),
+    );
+  }
 }
 
-class _ChatScreenState extends ConsumerState<ChatScreen> {
+class ChatAppBar extends ConsumerStatefulWidget implements PreferredSizeWidget {
+  const ChatAppBar({Key? key}) : super(key: key);
+
+  @override
+  ConsumerState<ChatAppBar> createState() => _ChatAppBarState();
+
+  @override
+  Size get preferredSize => const Size.fromHeight(60);
+}
+
+class _ChatAppBarState extends ConsumerState<ChatAppBar> {
+  bool isEditing = false;
+
+  final _controller = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     final chat = ref.watch(currentChatProv);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(chat.userNamesStr),
-      ),
-      body: const ChatMessagesList(),
-      bottomNavigationBar: const MessageSendBar(),
+    final chatNames =
+        Map<List<UserModel>, String>.from(ref.watch(chatNamesProv));
+
+    return AppBar(
+      title: isEditing
+          ? TextFormField(controller: _controller)
+          : Text(
+              chat.title(ref),
+            ),
+      actions: isEditing
+          ? [
+              IconButton(
+                icon: const Icon(Icons.check),
+                onPressed: () {
+                  isEditing = false;
+                  setState(() {});
+
+                  chatNames[chat] = _controller.text;
+                  ref.read(chatNamesProv.notifier).state = chatNames;
+                  // val
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.close),
+                onPressed: () {
+                  setState(() {
+                    isEditing = false;
+                  });
+                },
+              ),
+            ]
+          : [
+              IconButton(
+                icon: const Icon(Icons.edit),
+                onPressed: () {
+                  isEditing = !isEditing;
+                  setState(() {});
+                },
+              ),
+            ],
     );
   }
 }
