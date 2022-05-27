@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:networks_project_chat_client/main.dart';
 import 'package:networks_project_chat_client/provs/chat_names_prov.dart';
 
 import '../../../managers/chat_manager.dart';
@@ -175,15 +176,30 @@ class ChatMessageLI extends ConsumerWidget {
     final chat = ref.watch(currentChatProv);
 
     final messageOwner = chat.firstWhere((u) => u.id == message.senderId);
-
-    return ListTile(
-      title: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    final me = ref.watch(userProv)!;
+    final isMe = me.id == messageOwner.id;
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: isMe ? Colors.blue : Colors.grey[200],
+      ),
+      margin: const EdgeInsets.symmetric(
+        vertical: 5,
+        horizontal: 5,
+      ),
+      padding: const EdgeInsets.symmetric(
+        vertical: 15,
+        horizontal: 10,
+      ),
+      child: Column(
+        crossAxisAlignment:
+            isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
-          Text(
-            messageOwner.name ?? '',
-            style: Theme.of(context).textTheme.caption,
-          ),
+          if (!isMe)
+            Text(
+              messageOwner.name ?? '',
+              style: Theme.of(context).textTheme.caption,
+            ),
           Text(
             message.message,
             style: Theme.of(context).textTheme.subtitle1,
