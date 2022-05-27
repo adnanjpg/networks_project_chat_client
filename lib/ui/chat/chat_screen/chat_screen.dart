@@ -5,7 +5,6 @@ import 'package:networks_project_chat_client/provs/chat_names_prov.dart';
 
 import '../../../managers/chat_manager.dart';
 import '../../../models/chat_message_model.dart';
-import '../../../models/user_model.dart';
 import '../../../provs/current_chat_prov.dart';
 
 class ChatScreen extends StatelessWidget {
@@ -40,9 +39,6 @@ class _ChatAppBarState extends ConsumerState<ChatAppBar> {
   Widget build(BuildContext context) {
     final chat = ref.watch(currentChatProv);
 
-    final chatNames =
-        Map<List<UserModel>, String>.from(ref.watch(chatNamesProv));
-
     return AppBar(
       title: isEditing
           ? TextFormField(controller: _controller)
@@ -57,8 +53,10 @@ class _ChatAppBarState extends ConsumerState<ChatAppBar> {
                   isEditing = false;
                   setState(() {});
 
-                  chatNames[chat] = _controller.text;
-                  ref.read(chatNamesProv.notifier).state = chatNames;
+                  ref.read(chatNamesProv.notifier).assignWithSend(
+                        chat.map((e) => e.id!).toList(),
+                        _controller.text,
+                      );
                   // val
                 },
               ),

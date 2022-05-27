@@ -30,6 +30,5 @@ class UserModel {
           name == other.name;
 
   @override
-  // TODO: implement hashCode
-  int get hashCode => super.hashCode;
+  int get hashCode => id.hashCode ^ name.hashCode;
 }

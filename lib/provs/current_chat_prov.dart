@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod/riverpod.dart';
+import 'package:networks_project_chat_client/main.dart';
 
 import '../models/user_model.dart';
 import 'chat_names_prov.dart';
@@ -8,7 +8,11 @@ typedef ChatUsers = List<UserModel>;
 
 extension A on ChatUsers {
   String title(WidgetRef ref) {
-    final value = ref.read(chatNamesProv)[this];
+    final allNms = ref.read(chatNamesProv);
+    final me = ref.watch(userProv);
+    final ids = [...this, me!].map((e) => e.id!).toList();
+
+    final value = allNms[ChatNamesProvNot.userIdsToString(ids)];
 
     if (value == null) {
       return names.join(', ');

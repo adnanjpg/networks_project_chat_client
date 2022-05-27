@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:networks_project_chat_client/provs/chat_names_prov.dart';
 import '../models/message_model.dart';
 import '../utils/command_consts.dart';
 import '../utils/consts.dart';
@@ -49,6 +50,25 @@ abstract class ClientManager {
           final user = UserModel.fromJson(prms);
 
           ref.read(userProv.notifier).state = user;
+        }
+        if (msg.title == renameChatCommand) {
+          final prms = msg.params;
+          if (prms == null || prms.isEmpty) {
+            return;
+          }
+
+          final String? title = prms['title'];
+          final List<String> recievers = (prms['recievers'] as List)
+              .map(
+                (e) => e.toString(),
+              )
+              .toList();
+
+          if (title == null || title.isEmpty) {
+            return;
+          }
+
+          ref.read(chatNamesProv.notifier).assign(recievers, title);
         }
       },
     );

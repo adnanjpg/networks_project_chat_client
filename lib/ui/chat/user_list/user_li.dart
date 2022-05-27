@@ -4,7 +4,6 @@ import '../../../main.dart';
 
 import '../../../models/user_model.dart';
 import '../../../provs/current_chat_prov.dart';
-import '../../../utils/routes_consts.dart';
 
 class UserLI extends ConsumerWidget {
   final UserModel user;

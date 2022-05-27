@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:networks_project_chat_client/main.dart';
+import 'package:networks_project_chat_client/provs/current_chat_prov.dart';
 import 'package:networks_project_chat_client/ui/chat/user_list/user_selection_dialog.dart';
+import 'package:networks_project_chat_client/utils/routes_consts.dart';
 
 import '../../../managers/chat_manager.dart';
 
@@ -56,12 +59,25 @@ class _ChatsListScreenState extends ConsumerState<ChatsListScreen> {
   }
 }
 
-class ChatLI extends StatelessWidget {
+class ChatLI extends ConsumerWidget {
   final List<String> ids;
   const ChatLI(this.ids, {Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return Text(ids.toString());
+  Widget build(BuildContext context, ref) {
+    final allUsers = ref.watch(ChatManager.usersProv);
+
+    final users = allUsers.where((user) => ids.contains(user.id)).toList();
+    final ttl = users.title(ref);
+
+    return ListTile(
+      onTap: () {
+        final me = ref.watch(userProv);
+        ref.read(currentChatProv.notifier).state = [...users, me!];
+
+        Navigator.of(context).pushNamed(rChatScreen);
+      },
+      leading: Text(ttl),
+    );
   }
 }
