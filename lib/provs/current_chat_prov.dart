@@ -8,9 +8,8 @@ typedef ChatUsers = List<UserModel>;
 
 extension A on ChatUsers {
   String title(WidgetRef ref) {
-    final allNms = ref.read(chatNamesProv);
-    final me = ref.watch(userProv);
-    final ids = [...this, me!].map((e) => e.id!).toList();
+    final allNms = ref.watch(chatNamesProv);
+    final ids = map((e) => e.id!).toList();
 
     final value = allNms[ChatNamesProvNot.userIdsToString(ids)];
 

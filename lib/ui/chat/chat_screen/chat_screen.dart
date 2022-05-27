@@ -51,13 +51,14 @@ class _ChatAppBarState extends ConsumerState<ChatAppBar> {
                 icon: const Icon(Icons.check),
                 onPressed: () {
                   isEditing = false;
+
                   setState(() {});
 
                   ref.read(chatNamesProv.notifier).assignWithSend(
                         chat.map((e) => e.id!).toList(),
                         _controller.text,
                       );
-                  // val
+                  _controller.clear();
                 },
               ),
               IconButton(

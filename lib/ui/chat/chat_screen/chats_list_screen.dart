@@ -5,7 +5,7 @@ import 'package:networks_project_chat_client/main.dart';
 import 'package:networks_project_chat_client/provs/current_chat_prov.dart';
 import 'package:networks_project_chat_client/ui/chat/user_list/user_selection_dialog.dart';
 import 'package:networks_project_chat_client/utils/routes_consts.dart';
-
+import 'package:collection/collection.dart';
 import '../../../managers/chat_manager.dart';
 
 class ChatsListScreen extends ConsumerStatefulWidget {
@@ -20,11 +20,21 @@ class _ChatsListScreenState extends ConsumerState<ChatsListScreen> {
   @override
   Widget build(BuildContext context) {
     final allMsgs = ref.watch(ChatManager.chatMessagesProv);
-    final allRecievers = allMsgs
+    final newRecv = allMsgs
         .map(
           (msg) => msg.recieversIds..sort(),
         )
         .toSet();
+    final allRecievers = <List<String>>{};
+
+    for (var recv in newRecv) {
+      if (allRecievers
+          .any((element) => const IterableEquality().equals(element, recv))) {
+        continue;
+      }
+
+      allRecievers.add(recv);
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -67,13 +77,14 @@ class ChatLI extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     final allUsers = ref.watch(ChatManager.usersProv);
 
-    final users = allUsers.where((user) => ids.contains(user.id)).toList();
+    var users = allUsers.where((user) => ids.contains(user.id)).toList();
+    final me = ref.watch(userProv);
+    users = [...users, me!];
     final ttl = users.title(ref);
 
     return ListTile(
       onTap: () {
-        final me = ref.watch(userProv);
-        ref.read(currentChatProv.notifier).state = [...users, me!];
+        ref.read(currentChatProv.notifier).state = users;
 
         Navigator.of(context).pushNamed(rChatScreen);
       },
