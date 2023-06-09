@@ -12,14 +12,28 @@ import '../main.dart';
 import '../models/user_model.dart';
 import 'chat_manager.dart';
 
+enum ClientType { ec2, ecs }
+
 abstract class ClientManager {
   static IOWebSocketChannel? _ch;
 
-  static String get _wsUrl {
-    return 'ws://$ip:$port';
+  static const ClientType _clientType = ClientType.ecs;
+
+  static String get _selectedUrl => _clientType == ClientType.ec2
+      ? _wsEc2Url
+      : _clientType == ClientType.ecs
+          ? _wsEcsUrl
+          : throw Exception('Invalid client type');
+
+  static String get _wsEc2Url {
+    return 'ws://54.144.97.43:49160';
   }
 
-  static Uri get _wsUri => Uri.parse(_wsUrl);
+  static String get _wsEcsUrl {
+    return 'ws://54.156.91.141:8080';
+  }
+
+  static Uri get _wsUri => Uri.parse(_selectedUrl);
   static StreamSubscription? _subscription;
 
   static StreamController<MessageModel> chatMessagesController =
@@ -102,6 +116,10 @@ abstract class ClientManager {
   }
 
   static Future<void> sendMessage(MessageModel msg) async {
-    channel.sink.add(msg.toJsonStr());
+    try {
+      channel.sink.add(msg.toJsonStr());
+    } catch (e) {
+      print(e);
+    }
   }
 }
