@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:networks_project_chat_client/provs/chat_names_prov.dart';
 import '../models/message_model.dart';
 import '../utils/command_consts.dart';
-import '../utils/consts.dart';
 import 'package:web_socket_channel/io.dart';
 
 import '../main.dart';
@@ -119,7 +119,7 @@ abstract class ClientManager {
     try {
       channel.sink.add(msg.toJsonStr());
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     }
   }
 }

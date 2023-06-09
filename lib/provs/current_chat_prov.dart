@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:networks_project_chat_client/main.dart';
 
 import '../models/user_model.dart';
 import 'chat_names_prov.dart';

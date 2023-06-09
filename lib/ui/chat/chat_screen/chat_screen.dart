@@ -198,11 +198,11 @@ class ChatMessageLI extends ConsumerWidget {
           if (!isMe)
             Text(
               messageOwner.name ?? '',
-              style: Theme.of(context).textTheme.caption,
+              style: Theme.of(context).textTheme.bodySmall,
             ),
           Text(
             message.message,
-            style: Theme.of(context).textTheme.subtitle1,
+            style: Theme.of(context).textTheme.titleMedium,
           ),
         ],
       ),

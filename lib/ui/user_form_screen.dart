@@ -25,11 +25,11 @@ class _UserFormScreenState extends ConsumerState<UserFormScreen> {
         children: [
           Text(
             'Welcome to my amazing app!',
-            style: Theme.of(context).textTheme.headline5,
+            style: Theme.of(context).textTheme.headlineSmall,
           ),
           Text(
             'Please enter your name:',
-            style: Theme.of(context).textTheme.headline5,
+            style: Theme.of(context).textTheme.headlineSmall,
           ),
           TextField(
             decoration: const InputDecoration(
